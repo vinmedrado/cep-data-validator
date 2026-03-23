@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Splash ConsultaCEP</title>
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 800px;
+    height: 500px;
+    background-color: #000;
+    font-family: 'Microsoft PhagsPa', serif;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#container {
+    width: 90%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    position: relative;
+    z-index: 2;
+}
+
+#title {
+    font-size: 40px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    color: #00ffff;
+    text-shadow: 0 0 8px rgba(0,255,255,0.4), 0 0 16px rgba(0,200,255,0.3);
+    animation: titleGlow 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+    0% { text-shadow: 0 0 8px rgba(0,255,255,0.4), 0 0 16px rgba(0,200,255,0.3); }
+    50% { text-shadow: 0 0 16px rgba(0,255,255,0.5), 0 0 32px rgba(0,200,255,0.4); }
+    100% { text-shadow: 0 0 8px rgba(0,255,255,0.4), 0 0 16px rgba(0,200,255,0.3); }
+}
+
+#subtitle {
+    font-size: 20px;
+    margin-bottom: 35px;
+    color: #ccc;
+    animation: fadeText 2s infinite alternate;
+}
+
+@keyframes fadeText {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+#progressContainer {
+    width: 100%;
+    height: 22px;
+    background-color: #111;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: inset 0 0 6px rgba(255,255,255,0.15);
+}
+
+#progressBar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #00ffff, #00aaff);
+    border-radius: 12px;
+    box-shadow: 0 0 10px #00ffff, 0 0 20px #00aaff;
+    transition: width 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+#progressBar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 50%;
+    height: 100%;
+    background: rgba(255,255,255,0.25);
+    transform: skewX(-20deg);
+    animation: shine 1.5s infinite;
+}
+
+@keyframes shine {
+    0% { left: -50%; }
+    100% { left: 150%; }
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<div id="container">
+    <div id="title">Sistema de Controle e Consultas</div>
+    <div id="subtitle">Carregando módulos...</div>
+    <div id="progressContainer">
+        <div id="progressBar"></div>
+    </div>
+</div>
+
+<script>
+// --- Fios de luz animados ---
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = 800;
+canvas.height = 500;
+
+let lines = [];
+for(let i=0;i<35;i++){  // mais linhas para tela maior
+    lines.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        vx: (Math.random()-0.5)*0.7,
+        vy: (Math.random()-0.5)*0.7,
+        length: Math.random()*120+60,
+        alpha: Math.random()*0.3+0.2
+    });
+}
+
+function drawLines(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    lines.forEach(line=>{
+        ctx.strokeStyle = `rgba(0,255,255,${line.alpha})`;
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.moveTo(line.x, line.y);
+        ctx.lineTo(line.x + line.length*Math.cos(Date.now()/900), line.y + line.length*Math.sin(Date.now()/900));
+        ctx.stroke();
+
+        line.x += line.vx;
+        line.y += line.vy;
+
+        if(line.x < -60 || line.x > canvas.width+60) line.vx*=-1;
+        if(line.y < -60 || line.y > canvas.height+60) line.vy*=-1;
+    });
+    requestAnimationFrame(drawLines);
+}
+drawLines();
+
+// --- Barra de progresso ---
+let progress = 0;
+function updateProgress(val){
+    const progressBar = document.getElementById('progressBar');
+    const subtitle = document.getElementById('subtitle');
+    progressBar.style.width = val + '%';
+    if(val >= 100){
+        subtitle.innerText = 'Pronto!';
+    }
+}
+
+// Simula carregamento
+let interval = setInterval(()=>{
+    if(progress>=100){ clearInterval(interval); return;}
+    progress += Math.random()*4;
+    if(progress>100) progress=100;
+    updateProgress(progress.toFixed(0));
+}, 150);
+</script>
+</body>
+</html>
