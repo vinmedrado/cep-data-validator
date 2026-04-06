@@ -3,10 +3,10 @@
 ## 🖼️ Preview
 
 ### Consulta de CEP
-![Consulta](consulta.png)
+![Consulta](docs/consulta.png)
 
 ### Validação de Dados
-![Validação](validacao.png)
+![Validação](docs/validacao.png)
 
 > Ferramenta desktop para validação e higienização de dados com foco em performance e uso corporativo.
 

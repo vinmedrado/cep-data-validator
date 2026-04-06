@@ -1,4 +1,6 @@
-import sys, os
+import sys
+import os
+
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTabWidget
 from PyQt6.QtCore import QTimer, Qt, QUrl
 from PyQt6.QtWebEngineWidgets import QWebEngineView
@@ -6,28 +8,44 @@ from PyQt6.QtWebEngineWidgets import QWebEngineView
 from consulta_ceps import App as ConsultaCepsApp
 from validacao import ValidacaoApp
 
+
 # ---------------- Função correta para caminho ----------------
 def resource_path(relative_path):
-    if hasattr(sys, '_MEIPASS'):  # PyInstaller
+    if hasattr(sys, '_MEIPASS'):  
         base_path = sys._MEIPASS
     else:
-        base_path = os.path.dirname(os.path.abspath(__file__))  # FIX AQUI
+        base_path = os.path.dirname(os.path.abspath(__file__))  
+
     return os.path.join(base_path, relative_path)
+
 
 # ---------------- Main Window ----------------
 class MainWindow(QTabWidget):
     def __init__(self):
         super().__init__()
+
         self.setWindowTitle("Sistema de Consultas e Validações")
 
         self.setStyleSheet("""
-            QTabWidget::pane { border:0; background-color:#1e1e2f; }
-            QTabBar::tab {
-                background:#2a2a3d; color:#f0f0f0; padding:8px 20px;
-                border-top-left-radius:6px; border-top-right-radius:6px; margin-right:2px;
+            QTabWidget::pane {
+                border:0;
+                background-color:#1e1e2f;
             }
-            QTabBar::tab:selected { background:#1abc9c; color:#fff; }
-            QTabBar::tab:hover { background:#34495e; }
+            QTabBar::tab {
+                background:#2a2a3d;
+                color:#f0f0f0;
+                padding:8px 20px;
+                border-top-left-radius:6px;
+                border-top-right-radius:6px;
+                margin-right:2px;
+            }
+            QTabBar::tab:selected {
+                background:#1abc9c;
+                color:#fff;
+            }
+            QTabBar::tab:hover {
+                background:#34495e;
+            }
         """)
 
         self.consulta = ConsultaCepsApp()
@@ -35,6 +53,7 @@ class MainWindow(QTabWidget):
 
         self.validacao = ValidacaoApp()
         self.addTab(self.validacao, "Validação CPF/CNPJ")
+
 
 # ---------------- Splash ----------------
 class SplashWindow(QMainWindow):
@@ -62,7 +81,7 @@ class SplashWindow(QMainWindow):
 
         html_path = resource_path("splash.html")
 
-        # 🔥 fallback pra evitar QUALQUER erro
+        # fallback pra evitar QUALQUER erro
         if os.path.exists(html_path):
             self.view.setUrl(QUrl.fromLocalFile(html_path))
         else:
@@ -80,6 +99,7 @@ class SplashWindow(QMainWindow):
             self.timer.stop()
             self.close()
             self.callback()
+
 
 # ---------------- Execução ----------------
 if __name__ == "__main__":

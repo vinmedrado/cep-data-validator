@@ -3,7 +3,7 @@ import random
 from datetime import datetime, timedelta
 
 # ---------------- Config ----------------
-NUM_REGISTROS = 200
+NUM_REGISTROS = 1000000
 
 cidades = ["São Paulo", "Rio de Janeiro", "Belo Horizonte", "Curitiba", "Salvador"]
 estados = ["SP", "RJ", "MG", "PR", "BA"]
